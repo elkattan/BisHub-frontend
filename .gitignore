@@ -1,0 +1,19 @@
+# dependencies
+node_modules
+
+# logs
+*.log
+
+
+# Nuxt build
+.nuxt/
+
+# Nuxt generate
+dist/
+
+# Nuxt PWA
+sw.*
+
+# IDEs
+.vscode/
+.idea/

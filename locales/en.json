@@ -1,0 +1,83 @@
+{
+  "abs": {
+    "welcome": "Welcome to BisHub our new central social media",
+    "next": "Next",
+    "iam": "I am"
+  },
+  "role": {
+    "instructor": "Instructor",
+    "student": "Student"
+  },
+  "auth": {
+    "header": "Welcome To BIS Community",
+    "login": {
+      "title": "Login",
+      "action": "Login",
+      "fields": {
+        "username": {
+          "label": "Username or Email"
+        },
+        "password": {
+          "label": "Password"
+        }
+      }
+    },
+    "register": {
+      "title": "Register",
+      "action": "Register",
+      "fields": {
+        "name": {
+          "label": "Your Full Name"
+        },
+        "username": {
+          "label": "A Cool Username"
+        },
+        "password": {
+          "label": "Strong Password"
+        },
+        "rePassword": {
+          "label": "Confirm Password"
+        },
+        "email": {
+          "label": "Your E-mail"
+        },
+        "citizenId": {
+          "label": "Your Governomental ID"
+        },
+        "studentId": {
+          "label": "Your Student ID"
+        },
+        "birthDate": {
+          "label": "Your date of birth"
+        },
+        "graduationDate": {
+          "label": "Your last day at collage as student"
+        },
+        "subject": {
+          "label": "Your Speciality"
+        },
+        "bio": {
+          "label": "About Yourself"
+        },
+        "level": {
+          "label": "Your Level (year)"
+        },
+        "gpa": {
+          "label": "Your Great GPA"
+        },
+        "status": {
+          "label": "What's on your mind now ?"
+        }
+      }
+    }
+  },
+  "home": {
+    "title": "BisHub | Home"
+  },
+  "validation": {
+    "required": "This is required bro!",
+    "passMissMatch": "Your password is diffrent than this one",
+    "invalidLength": "That's too short !",
+    "invalidEmail": "This Email is not valid"
+  }
+}

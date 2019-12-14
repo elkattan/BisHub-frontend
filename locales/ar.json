@@ -1,0 +1,83 @@
+{
+  "abs": {
+    "welcome": "أهلا بك في BisHub اول مجتمع متخصص لطلاب نظم و معلومات الاعمال جامعة حلوان",
+    "next": "التالي",
+    "iam": "أنا"
+  },
+  "role": {
+    "instructor": "معلم",
+    "student": "تلميذ"
+  },
+  "auth": {
+    "header": "أهلا في مجتمعنا !",
+    "login": {
+      "title": "سجل دخول",
+      "action": "أفتح",
+      "fields": {
+        "username": {
+          "label": "أسم النستخدم او البريد الالكتروني"
+        },
+        "password": {
+          "label": "كلمة المرور"
+        }
+      }
+    },
+    "register": {
+      "title": "أنشأ حساب",
+      "action": "سجل",
+      "fields": {
+        "name": {
+          "label": "أسمك رباعي"
+        },
+        "username": {
+          "label": "أسم المستخدم"
+        },
+        "password": {
+          "label": "كلمة مرورك"
+        },
+        "rePassword": {
+          "label": "أكد كلمة المرور"
+        },
+        "email": {
+          "label": "بريدك الالكتروني"
+        },
+        "citizenId": {
+          "label": "رقمك القومي"
+        },
+        "studentId": {
+          "label": "رقمك التعريفي في الكلية"
+        },
+        "birthDate": {
+          "label": "تاريخ ميلادك"
+        },
+        "graduationDate": {
+          "label": "أخر يوم نمت فيه كطالب"
+        },
+        "subject": {
+          "label": "تخصصك"
+        },
+        "bio": {
+          "label": "أخبرنا عنك"
+        },
+        "level": {
+          "label": "مستواك"
+        },
+        "gpa": {
+          "label": "معدلك التراكمي"
+        },
+        "status": {
+          "label": "ماذا يدور في ذهنك ؟"
+        }
+      }
+    }
+  },
+  "home": {
+    "title": "BisHub | أهلا"
+  },
+  "validation": {
+    "required": "مينفعش تسبهالي فضيه!",
+    "passMissMatch": "كلمة المرور مش ظبطة",
+    "invalidLength": "أيه ده قصير قوي !!",
+    "invalidEmail": "البريد الالكتروني ده ميصحش!"
+  }
+}
