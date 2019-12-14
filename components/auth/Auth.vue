@@ -9,7 +9,7 @@
         sm="12"
         cols="12"
       >
-        <h2 class="title is-2 intro-text">{{ $t("auth.header") }}</h2>
+        <h2 class="display-2 mb-12 intro-text">{{ $t("auth.header") }}</h2>
         <v-img contain width="50rem" :src="introImage" alt="Fill The Form" />
         <div class="intro-arrow" @click="scrolToHandlers">
           <v-icon large>mdi-chevron-double-down</v-icon>

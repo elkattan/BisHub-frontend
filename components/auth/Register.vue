@@ -1,11 +1,14 @@
 <template>
   <div class="register-container">
     <v-row>
-      <v-icon v-show="showSpecialized" @click="showSpecialized = false">{{
-        $vuetify.rtl ? "mdi-arrow-right" : "mdi-arrow-left"
-      }}</v-icon>
+      <v-icon
+        class="display-1 mb-3 mr-2"
+        v-show="showSpecialized"
+        @click="showSpecialized = false"
+        >{{ $vuetify.rtl ? "mdi-arrow-right" : "mdi-arrow-left" }}</v-icon
+      >
 
-      <h2 class="title is-2">
+      <h2 class="display-1 mb-4">
         {{
           $t("auth.register.title") +
             (showSpecialized
@@ -29,6 +32,7 @@
           v-model="email"
           :label="$t('auth.register.fields.email.label')"
           :rules="[required, validMail]"
+          type="email"
         ></v-text-field>
 
         <v-row fluid>
@@ -39,6 +43,7 @@
             :rules="[required]"
             :type="showPass ? 'text' : 'password'"
             @click:append="showPass = !showPass"
+            class="pr-6"
           ></v-text-field>
 
           <v-text-field
@@ -170,17 +175,22 @@
               v-model="studentId"
               :label="$t('auth.register.fields.studentId.label')"
               :rules="[required]"
+              type="number"
+              class="pr-4"
             ></v-text-field>
             <v-text-field
               v-model="level"
               :label="$t('auth.register.fields.level.label')"
               :rules="[required]"
+              type="number"
+              class="pr-4"
             ></v-text-field>
 
             <v-text-field
               v-model="gpa"
               :label="$t('auth.register.fields.gpa.label')"
               :rules="[required]"
+              type="number"
             ></v-text-field>
           </v-row>
 
@@ -192,13 +202,17 @@
           ></v-textarea>
         </div>
 
-        <v-btn block :loading="loading">{{ $t("auth.register.action") }}</v-btn>
+        <v-btn block color="primary" :loading="loading" @click="signup">{{
+          $t("auth.register.action")
+        }}</v-btn>
       </div>
     </v-form>
   </div>
 </template>
 
 <script>
+import { API_URL } from "~/utils/vars";
+
 export default {
   name: "Register",
   data: () => ({
@@ -241,6 +255,95 @@ export default {
     validMail(val) {
       const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       return pattern.test(val) || this.$t("validation.invalidEmail");
+    },
+    async signup() {
+      this.loading = true;
+      console.log("SIGNING UP", this.validMail(this.email));
+
+      // Validation
+      if (
+        this.username.length > 3 &&
+        this.password.length > 5 &&
+        this.password === this.rePassword &&
+        this.validMail(this.email) === true &&
+        this.fullName.length > 10 &&
+        this.citizenId.length === 14
+      ) {
+        console.log("USER VALID");
+
+        const now = new Date();
+        if (
+          this.isInstructor &&
+          (!this.birthDate ||
+          !this.graduationDate ||
+          now.getFullYear() - 35 > this.birthDate.getFullYear() || // Can not be more than 35 years old
+          now.getFullYear() - 18 < this.birthDate.getFullYear() || // Can not be younger Than 18...
+          now.getFullYear() - 6 > this.graduationDate.getFullYear() || // Graduated 6 Years ago MAX
+          now.getFullYear() < this.graduationDate.getFullYear() || // Graduated at most the past year
+            this.subject.length <= 3)
+        ) {
+          console.log("INSTRUCTOR INVALID");
+
+          return; // Instructor is selected but data is not valid
+        } else if (
+          isNaN(this.gpa) ||
+          isNaN(this.studentId) ||
+          isNaN(this.level) ||
+          this.level > 4 ||
+          this.level < 1 ||
+          this.gpa > 4 ||
+          this.gpa < 1
+        ) {
+          console.log("STUDENT INVALID");
+
+          return; // student is selected but data is not valid
+        }
+        console.log("REQUESTING");
+
+        // Requesting
+        await this.submit();
+      }
+      this.loading = false;
+    },
+    async submit() {
+      let payload = {
+        username: this.username,
+        password: this.password,
+        email: this.email,
+        citizen_id: this.citizenId,
+        image_url: ""
+      };
+      if (this.isInstructor) {
+        payload.instructor = {
+          name: this.name,
+          birth_date: `${this.birthDate.getFullYear()}-${this.birthDate.getMonth() +
+            1}-${this.birthDate.getDate()}`,
+          graduation_date: `${this.graduationDate.getFullYear()}-${this.graduationDate.getMonth() +
+            1}-${this.graduationDate.getDate()}`,
+          subject: this.subject,
+          bio: this.bio
+        };
+      } else {
+        payload.student = {
+          id: this.studentId,
+          name: this.fullName,
+          level: this.level,
+          gpa: this.gpa,
+          status: this.status
+        };
+      }
+      const { data, status } = await this.$axios.post(
+        `${API_URL}/api/users/register`,
+        payload
+      );
+
+      // Error Handling
+      console.log(status, data);
+
+      if (status >= 200) {
+        this.$store.commit("auth/setUser", data);
+      }
+      console.log("AUTH: ", this.$store.state.auth.user);
     }
   }
 };
@@ -253,9 +356,6 @@ export default {
   align-content: space-around;
   margin: 0 4rem;
   padding: 4rem 0;
-}
-.row > .v-input {
-  padding: 10px;
 }
 .specialized-form > button {
   margin-top: 4rem;

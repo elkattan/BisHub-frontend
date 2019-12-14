@@ -1,4 +1,10 @@
 export default function({ isHMR, app, store, route, params, error, redirect }) {
+  console.log("%cWelcome To BisHub", "color: #0f111a; font-size: large;");
+  console.log(
+    "%cHello Instructor, is this proof enough ? 1718500",
+    "color: #0f111a; font-size: large;"
+  );
+
   const defaultLocale = app.i18n.fallbackLocale;
   // If middleware is called from hot module replacement, ignore it
   if (isHMR) {

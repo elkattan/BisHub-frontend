@@ -1,6 +1,6 @@
 <template>
   <div class="login-container" dir="auto">
-    <h2 class="title is-2">{{ $t("auth.login.title") }}</h2>
+    <h2 class="display-2 mb-4">{{ $t("auth.login.title") }}</h2>
     <v-form>
       <v-text-field
         v-model="username"
@@ -17,12 +17,16 @@
         @click:append="showPass = !showPass"
       ></v-text-field>
 
-      <v-btn block :loading="loading">{{ $t("auth.login.action") }}</v-btn>
+      <v-btn block color="primary" @click="login" :loading="loading">{{
+        $t("auth.login.action")
+      }}</v-btn>
     </v-form>
   </div>
 </template>
 
 <script>
+import { API_URL } from "~/utils/vars";
+
 export default {
   name: "Login",
   data: () => ({
@@ -34,6 +38,28 @@ export default {
   methods: {
     required(value) {
       return !!value || this.$t("validation.required");
+    },
+    async login() {
+      this.loading = true;
+      // Validation
+      if (this.username.length > 3 && this.password.length > 5) {
+        // Requesting
+        const { data, status } = await this.$axios.post(
+          `${API_URL}/api/users/login`,
+          {
+            username: this.username,
+            password: this.password
+          }
+        );
+        // Error Handling
+        console.log(status, data);
+
+        if (status >= 200) {
+          this.$store.commit("auth/setUser", data);
+        }
+        console.log("AUTH: ", this.$store.state.auth.user);
+      }
+      this.loading = false;
     }
   }
 };
