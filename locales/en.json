@@ -1,12 +1,22 @@
 {
   "abs": {
-    "welcome": "Welcome to BisHub our new central social media",
+    "welcome_text": "Welcome to BisHub our new central social media",
+    "welcome": "Welcome",
+    "hello": "Hello",
     "next": "Next",
-    "iam": "I am"
+    "iam": "I am",
+    "no": "There is no",
+    "success": "Great, that went well"
   },
   "role": {
     "instructor": "Instructor",
-    "student": "Student"
+    "student": "Student",
+    "instructors": "Instructors",
+    "students": "Students"
+  },
+  "action": {
+    "follow": "Follow",
+    "unfollow": "UnFollow"
   },
   "auth": {
     "header": "Welcome To BIS Community",
@@ -69,15 +79,29 @@
           "label": "What's on your mind now ?"
         }
       }
+    },
+    "logout": {
+      "title": "Logout",
+      "action": "Logout"
     }
   },
   "home": {
-    "title": "BisHub | Home"
+    "title": "BisHub | Home",
+    "menu": {
+      "news": "News",
+      "findStudent": "Find Student",
+      "findInstructor": "Find Instructor"
+    }
   },
   "validation": {
     "required": "This is required bro!",
     "passMissMatch": "Your password is diffrent than this one",
     "invalidLength": "That's too short !",
     "invalidEmail": "This Email is not valid"
+  },
+  "error": {
+    "offline": "You are offline bro!",
+    "auth": "Auth Error, Try Again",
+    "unexpected": "What have you done !!"
   }
 }

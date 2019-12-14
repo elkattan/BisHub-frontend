@@ -21,6 +21,17 @@
         $t("auth.login.action")
       }}</v-btn>
     </v-form>
+    <!-- Info Notification -->
+    <v-snackbar v-model="notifyInfo.show" right>
+      <v-icon>mdi-alert-circle</v-icon>
+      {{ notifyInfo.text }}
+    </v-snackbar>
+
+    <!-- Error Notification -->
+    <v-snackbar v-model="notifyError.show" color="error" right>
+      <v-icon>mdi-alert</v-icon>
+      {{ notifyError.text }}
+    </v-snackbar>
   </div>
 </template>
 
@@ -33,7 +44,15 @@ export default {
     username: "",
     password: "",
     showPass: false,
-    loading: false
+    loading: false,
+    notifyInfo: {
+      show: false,
+      text: ""
+    },
+    notifyError: {
+      show: false,
+      text: ""
+    }
   }),
   methods: {
     required(value) {
@@ -44,20 +63,25 @@ export default {
       // Validation
       if (this.username.length > 3 && this.password.length > 5) {
         // Requesting
-        const { data, status } = await this.$axios.post(
-          `${API_URL}/api/users/login`,
-          {
+        const res = await this.$axios
+          .post(`${API_URL}/api/users/login`, {
             username: this.username,
             password: this.password
-          }
-        );
+          })
+          .catch(err => {
+            if (this.$nuxt.isOffline) {
+              this.notifyInfo.text = this.$t("error.offline");
+              this.notifyInfo.show = true;
+            } else {
+              this.notifyError.text = this.$t("error.auth");
+              this.notifyError.show = true;
+            }
+          });
         // Error Handling
-        console.log(status, data);
 
-        if (status >= 200) {
-          this.$store.commit("auth/setUser", data);
+        if (res && res.status >= 200) {
+          this.$store.commit("auth/setUser", res.data);
         }
-        console.log("AUTH: ", this.$store.state.auth.user);
       }
       this.loading = false;
     }

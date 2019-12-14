@@ -207,6 +207,23 @@
         }}</v-btn>
       </div>
     </v-form>
+    <!-- Info Notification -->
+    <v-snackbar v-model="notifyInfo.show" right>
+      <v-icon>mdi-alert-circle</v-icon>
+      {{ notifyInfo.text }}
+    </v-snackbar>
+
+    <!-- Info Success -->
+    <v-snackbar v-model="notifySuccess.show" color="success" right>
+      <v-icon>mdi-check-circle</v-icon>
+      {{ notifySuccess.text }}
+    </v-snackbar>
+
+    <!-- Error Notification -->
+    <v-snackbar v-model="notifyError.show" color="error" right>
+      <v-icon>mdi-alert</v-icon>
+      {{ notifyError.text }}
+    </v-snackbar>
   </div>
 </template>
 
@@ -237,7 +254,19 @@ export default {
     showPass: false,
     showRePass: false,
     showSpecialized: false,
-    loading: false
+    loading: false,
+    notifyInfo: {
+      show: false,
+      text: ""
+    },
+    notifySuccess: {
+      show: false,
+      text: ""
+    },
+    notifyError: {
+      show: false,
+      text: ""
+    }
   }),
   methods: {
     required(val) {
@@ -258,8 +287,6 @@ export default {
     },
     async signup() {
       this.loading = true;
-      console.log("SIGNING UP", this.validMail(this.email));
-
       // Validation
       if (
         this.username.length > 3 &&
@@ -269,21 +296,19 @@ export default {
         this.fullName.length > 10 &&
         this.citizenId.length === 14
       ) {
-        console.log("USER VALID");
-
         const now = new Date();
+        const birthDate = new Date(this.birthDate);
+        const graduationDate = new Date(this.graduationDate);
         if (
           this.isInstructor &&
           (!this.birthDate ||
           !this.graduationDate ||
-          now.getFullYear() - 35 > this.birthDate.getFullYear() || // Can not be more than 35 years old
-          now.getFullYear() - 18 < this.birthDate.getFullYear() || // Can not be younger Than 18...
-          now.getFullYear() - 6 > this.graduationDate.getFullYear() || // Graduated 6 Years ago MAX
-          now.getFullYear() < this.graduationDate.getFullYear() || // Graduated at most the past year
+          now.getFullYear() - 35 > birthDate.getFullYear() || // Can not be more than 35 years old
+          now.getFullYear() - 18 < birthDate.getFullYear() || // Can not be younger Than 18...
+          now.getFullYear() - 6 > graduationDate.getFullYear() || // Graduated 6 Years ago MAX
+          now.getFullYear() < graduationDate.getFullYear() || // Graduated at most the past year
             this.subject.length <= 3)
         ) {
-          console.log("INSTRUCTOR INVALID");
-
           return; // Instructor is selected but data is not valid
         } else if (
           isNaN(this.gpa) ||
@@ -294,11 +319,8 @@ export default {
           this.gpa > 4 ||
           this.gpa < 1
         ) {
-          console.log("STUDENT INVALID");
-
           return; // student is selected but data is not valid
         }
-        console.log("REQUESTING");
 
         // Requesting
         await this.submit();
@@ -306,6 +328,9 @@ export default {
       this.loading = false;
     },
     async submit() {
+      const birthDate = new Date(this.birthDate);
+      const graduationDate = new Date(this.graduationDate);
+
       let payload = {
         username: this.username,
         password: this.password,
@@ -315,11 +340,11 @@ export default {
       };
       if (this.isInstructor) {
         payload.instructor = {
-          name: this.name,
-          birth_date: `${this.birthDate.getFullYear()}-${this.birthDate.getMonth() +
-            1}-${this.birthDate.getDate()}`,
-          graduation_date: `${this.graduationDate.getFullYear()}-${this.graduationDate.getMonth() +
-            1}-${this.graduationDate.getDate()}`,
+          name: this.fullName,
+          birth_date: `${birthDate.getFullYear()}-${birthDate.getMonth() +
+            1}-${birthDate.getDate()}`,
+          graduation_date: `${graduationDate.getFullYear()}-${graduationDate.getMonth() +
+            1}-${graduationDate.getDate()}`,
           subject: this.subject,
           bio: this.bio
         };
@@ -332,18 +357,24 @@ export default {
           status: this.status
         };
       }
-      const { data, status } = await this.$axios.post(
-        `${API_URL}/api/users/register`,
-        payload
-      );
-
       // Error Handling
-      console.log(status, data);
+      const res = await this.$axios
+        .post(`${API_URL}/api/users/register`, payload)
+        .catch(err => {
+          if (this.$nuxt.isOffline) {
+            this.notifyInfo.text = this.$t("error.offline");
+            this.notifyInfo.show = true;
+          } else {
+            this.notifyError.text = this.$t("error.unexpected");
+            this.notifyError.show = true;
+          }
+        });
 
-      if (status >= 200) {
-        this.$store.commit("auth/setUser", data);
+      if (res && res.status === 200) {
+        this.notifySuccess.text = this.$t("abs.success");
+        this.notifySuccess.show = true;
+        setTimeout(() => this.$emit("done"), 2000);
       }
-      console.log("AUTH: ", this.$store.state.auth.user);
     }
   }
 };

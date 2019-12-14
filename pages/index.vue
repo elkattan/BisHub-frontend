@@ -13,6 +13,11 @@ export default {
   head() {
     return { title: this.$t("home.title") };
   },
+  created() {
+    this.$vuetify.rtl = this.$store.state.localization.rtl.includes(
+      this.$store.state.localization.locale
+    );
+  },
   components: {
     Auth,
     Home

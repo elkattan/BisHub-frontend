@@ -1,12 +1,22 @@
 {
   "abs": {
-    "welcome": "أهلا بك في BisHub اول مجتمع متخصص لطلاب نظم و معلومات الاعمال جامعة حلوان",
+    "welcome_text": "أهلا بك في BisHub اول مجتمع متخصص لطلاب نظم و معلومات الاعمال جامعة حلوان",
+    "welcome": "يا هلا",
+    "hello": "أهلا",
     "next": "التالي",
-    "iam": "أنا"
+    "iam": "أنا",
+    "no": "لا يوجد",
+    "success": "عااااش, تم بنجاح الحمد لله"
   },
   "role": {
     "instructor": "معلم",
-    "student": "تلميذ"
+    "student": "تلميذ",
+    "instructors": "معلمين",
+    "students": "تلاميذ"
+  },
+  "action": {
+    "follow": "تابع",
+    "unfollow": "أترك"
   },
   "auth": {
     "header": "أهلا في مجتمعنا !",
@@ -69,15 +79,29 @@
           "label": "ماذا يدور في ذهنك ؟"
         }
       }
+    },
+    "logout": {
+      "title": "خروج",
+      "action": "سجل خروج"
     }
   },
   "home": {
-    "title": "BisHub | أهلا"
+    "title": "BisHub | أهلا",
+    "menu": {
+      "news": "الجديد",
+      "findStudent": "التلاميذ",
+      "findInstructor": "المعلمين"
+    }
   },
   "validation": {
     "required": "مينفعش تسبهالي فضيه!",
     "passMissMatch": "كلمة المرور مش ظبطة",
     "invalidLength": "أيه ده قصير قوي !!",
     "invalidEmail": "البريد الالكتروني ده ميصحش!"
+  },
+  "error": {
+    "offline": "أفتح النت الاول",
+    "auth": "حصل مشاكل, حاول تاني",
+    "unexpected": "عملت ايه يا عم !!"
   }
 }

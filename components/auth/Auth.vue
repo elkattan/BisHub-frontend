@@ -3,7 +3,7 @@
     <v-row>
       <v-col
         class="auth-intro"
-        :class="{ 'auth-intro-rtl': isRtl }"
+        :class="{ 'auth-intro-rtl': $vuetify.rtl }"
         lg="6"
         md="6"
         sm="12"
@@ -38,7 +38,7 @@
             <Login />
           </v-tab-item>
           <v-tab-item key="register">
-            <Register />
+            <Register @done="tab = 'login'" />
           </v-tab-item>
         </v-tabs-items>
       </v-col>
@@ -65,14 +65,6 @@ export default {
       require("~/assets/images/social_sharing.svg")
     ];
     this.introImage = images[Math.floor(Math.random() * images.length)];
-    this.$vuetify.rtl = this.isRtl;
-  },
-  computed: {
-    isRtl() {
-      return this.$store.state.localization.rtl.includes(
-        this.$store.state.localization.locale
-      );
-    }
   },
   methods: {
     scrolToHandlers() {
