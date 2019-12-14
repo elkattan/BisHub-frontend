@@ -102,6 +102,7 @@
   "error": {
     "offline": "You are offline bro!",
     "auth": "Auth Error, Try Again",
-    "unexpected": "What have you done !!"
+    "unexpected": "What have you done !!",
+    "connection": "Connection Error"
   }
 }

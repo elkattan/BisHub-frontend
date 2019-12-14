@@ -55,8 +55,6 @@ export default {
   }),
   async created() {
     if (this.user) {
-      console.log("AUTH: ", this.user);
-
       const res = await this.$axios
         .get(`${API_URL}/api/students`, {
           headers: {

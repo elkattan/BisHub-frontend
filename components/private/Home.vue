@@ -30,7 +30,7 @@
 
       <v-divider></v-divider>
 
-      <v-list dense>
+      <v-list shaped dense>
         <v-list-item
           v-for="item in items"
           :key="item.title"
@@ -69,6 +69,8 @@
 </template>
 
 <script>
+import { API_URL } from "~/utils/vars";
+
 import InstructorList from "~/components/private/InstructorList";
 import StudentList from "~/components/private/StudentList";
 import Profile from "~/components/private/Profile";
@@ -108,6 +110,7 @@ export default {
     this.notifyInfo.text = this.$t("abs.welcome") + ` ${this.user.name}`;
     this.notifyInfo.icon = "mdi-emoticon-excited";
     this.notifyInfo.show = true;
+    this.updateStudent();
   },
   computed: {
     user() {
@@ -117,6 +120,21 @@ export default {
   methods: {
     logout() {
       this.$store.commit("auth/setUser", null);
+    },
+    async updateStudent() {
+      const res = await this.$axios
+        .get(`${API_URL}/api/students/${this.user.student.id}`, {
+          headers: {
+            Authorization: "Bearer " + this.user.accessToken
+          }
+        })
+        .catch(() => {
+          this.notifyError.text = this.$t("error.connection");
+          this.notifyError.show = true;
+        });
+      if (res && res.status === 200) {
+        this.$store.commit("auth/updateStudent", res.data);
+      }
     },
     getRandomColor() {
       let colors = ["error", "indiago", "success", "accent", "warning", "info"];

@@ -29,6 +29,10 @@
               </v-col>
 
               <v-col class="text-no-wrap" cols="5" sm="3">
+                <strong> {{ instructor.subject }} </strong>
+              </v-col>
+
+              <v-col class="text-no-wrap" cols="5" sm="3">
                 <strong>
                   Graduated
                   {{ new Date(instructor.graduation_date).toDateString() }}
@@ -46,13 +50,15 @@
               <v-spacer></v-spacer>
               <v-btn
                 v-if="!user.isInstructor"
+                @click="toggleFollow(instructor.id)"
+                :loading="loading"
                 :color="
-                  user.student.instructors.includes(instructors.id)
+                  user.student.instructors.includes(instructor.id)
                     ? 'error'
                     : 'success'
                 "
                 >{{
-                  user.student.instructors.includes(instructors.id)
+                  user.student.instructors.includes(instructor.id)
                     ? $t("action.unfollow")
                     : $t("action.follow")
                 }}</v-btn
@@ -62,6 +68,11 @@
         </v-expansion-panel>
       </v-expansion-panels>
     </v-row>
+    <!-- Error Notification -->
+    <v-snackbar v-model="notifyError.show" color="error" right>
+      <v-icon>mdi-alert</v-icon>
+      {{ notifyError.text }}
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -71,7 +82,12 @@ import { API_URL } from "~/utils/vars";
 export default {
   name: "instructorsList",
   data: () => ({
-    instructors: []
+    instructors: [],
+    loading: false,
+    notifyError: {
+      text: "",
+      show: false
+    }
   }),
   async created() {
     if (this.$store.state.auth.user) {
@@ -82,7 +98,8 @@ export default {
           }
         })
         .catch(err => {
-          console.error(err);
+          this.notifyError.text = this.$t("error.connection");
+          this.notifyError.show = true;
         });
       if (res && res.status === 200) {
         for (let ins in res.data) {
@@ -99,6 +116,42 @@ export default {
     getRandomColor() {
       let colors = ["error", "indiago", "success", "secondary", "warning"];
       return colors[Math.floor(Math.random() * colors.length)];
+    },
+    async toggleFollow(id) {
+      this.loading = true;
+      let res = null;
+      if (this.user.student.instructors.includes(id)) {
+        console.log("LSA");
+        res = await this.$axios
+          .delete(`${API_URL}/api/students/${this.user.student.id}/add/${id}`, {
+            headers: {
+              Authorization: "Bearer " + this.user.accessToken
+            }
+          })
+          .catch(() => {
+            this.notifyError.text = this.$t("error.connection");
+            this.notifyError.show = true;
+          });
+      } else {
+        res = await this.$axios
+          .post(
+            `${API_URL}/api/students/${this.user.student.id}/add/${id}`,
+            {},
+            {
+              headers: {
+                Authorization: "Bearer " + this.user.accessToken
+              }
+            }
+          )
+          .catch(() => {
+            this.notifyError.text = this.$t("error.connection");
+            this.notifyError.show = true;
+          });
+      }
+      if (res && res.status === 200) {
+        this.$store.commit("auth/updateStudent", res.data);
+      }
+      this.loading = false;
     }
   },
   computed: {

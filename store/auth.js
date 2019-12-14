@@ -14,5 +14,11 @@ export const mutations = {
       }
     }
     state.user = user;
+  },
+
+  updateStudent(state, student) {
+    if (state.user.student) {
+      state.user.student = student;
+    }
   }
 };
